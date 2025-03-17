@@ -365,8 +365,8 @@ in
             if [ $continue -eq 1 ]; then
               zpool create -f "${config.name}" \
                 -R ${rootMountPoint} \
-                ${lib.concatStringsSep " " (lib.mapAttrsToList (n: v: "-o ${n}=${v}") config.options)} \
-                ${lib.concatStringsSep " " (lib.mapAttrsToList (n: v: "-O ${n}=${v}") config.rootFsOptions)} \
+                ${lib.concatStringsSep " " (lib.mapAttrsToList (n: v: "-o ${lib.escapeShellArg "${n}=${v}"}") config.options)} \
+                ${lib.concatStringsSep " " (lib.mapAttrsToList (n: v: "-O ${lib.escapeShellArg "${n}=${v}"}") config.rootFsOptions)} \
                 ''${topology:+ $topology}
               if [[ $(zfs get -H mounted "${config.name}" | cut -f3) == "yes" ]]; then
                 zfs unmount "${config.name}"
